@@ -1,13 +1,9 @@
 const robots = {
-    text: require('./robots/text.js'),
-    input: require('./robots/input.js'),
-    search: require('./robots/search.js')
+    question: require('./robots/question.js')
 }
 
 function start() {
-    // robots.input()
-    robots.search()
-    // robots.text()
+    robots.question()
 }
 
 start()
