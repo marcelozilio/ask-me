@@ -7,20 +7,18 @@ const assistant = new AssistantV1({
     username: 'apikey'
 });
 
-function robot() {
-    sendMessage()
-}
-
-function sendMessage() {
-    assistant.message({
-        workspace_id: watsonAssistantCredentials.workspace_id,
-        input: { 'text': 'Boa noite' }
-    }, function (err, response) {
-        if (err) {
-            console.log('error:', err);
-        } else {
-            console.log(response.output.text);
-        }
+async function robot(question) {
+    return new Promise((resolve, reject) => {
+        assistant.message({
+            workspace_id: watsonAssistantCredentials.workspace_id,
+            input: { 'text': question }
+        }, function (err, response) {
+            if (err) {
+                resolve(err);
+            } else {
+                resolve(response);
+            }
+        })
     })
 }
 

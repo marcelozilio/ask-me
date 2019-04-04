@@ -1,9 +1,19 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.json());
+app.use(express.static('./public'));
+
+const port = 3000;
+
 const robots = {
-    question: require('./robots/question.js')
+    chatbot: require('./robots/chatbot.js')
 }
 
-function start() {
-    robots.question()
-}
+app.post('/conversation/', async (req, res) => {
+    res.json(await robots.chatbot(req.body.text))
+});
 
-start()
+app.listen(port, () => console.log(`Running on port ${port}`));
