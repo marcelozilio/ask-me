@@ -9,11 +9,18 @@ app.use(express.static('./public'));
 const port = 3000;
 
 const robots = {
-    chatbot: require('./robots/chatbot.js')
+    chatbot: require('./robots/chatbot.js'),
+    state: require('./robots/state.js')
 }
 
 app.post('/conversation/', async (req, res) => {
-    res.json(await robots.chatbot(req.body.text))
+    const content = req.body;
+
+    robots.state.save(content)
+
+    await robots.chatbot()
+
+    res.json(robots.state.load())
 });
 
 app.listen(port, () => console.log(`Running on port ${port}`));

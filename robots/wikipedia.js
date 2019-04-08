@@ -1,14 +1,20 @@
 const algorithmia = require('algorithmia')
 const algorithmiaApiKey = require('../credentials/algorithmia.json').apikey
 
-async function robot(question) {
-    return await getContentFromWikipedia(question)
+const robots = {
+    state: require('./state.js')
+}
+
+async function robot() {
+    const content = robots.state.load()
+    return await getContentFromWikipedia()
     
-    async function getContentFromWikipedia(question) {
+
+    async function getContentFromWikipedia() {
         return new Promise((resolve, reject) => {
             algorithmia.client(algorithmiaApiKey)
                 .algo('web/WikipediaParser/0.1.2')
-                .pipe({ "articleName": question, "lang": "pt" })
+                .pipe({ "articleName": content.input.text, "lang": "pt" })
                 .then(function (response) {
                     resolve(sanitizeContent(response.get().content))
                 })
