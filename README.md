@@ -9,6 +9,28 @@ Projeto acadêmico open source para responder perguntas.
 * [Watson IBM](https://www.ibm.com/br-pt/cloud) - Machine learning
 * [Algorithmia](https://algorithmia.com) - Marketplace of algorithms 
 
+## Estrutura de dados
+`{
+	"input": {
+		"text": "..."
+    },    
+    "output": {
+		"text": "..."
+    },
+    "sourceWikipedia": "...",
+    "sentences": [
+        {
+            "text": "...",
+            "keywords": [
+                "..."
+            ],
+            "images": [
+                "..."
+            ]
+        }
+    ]
+}`
+
 ## Contribuições
 
 Pull requests são bem vindos. Para alterações, por favor abra uma issue para discutirmos o que voĉe gostaria de alterar.
