@@ -7,8 +7,8 @@ const robots = {
 
 async function robot() {
     const content = robots.state.load()
-    return await getContentFromWikipedia()
-    
+    content.sourceWikipedia = await getContentFromWikipedia()
+    robots.state.save(content);
 
     async function getContentFromWikipedia() {
         return new Promise((resolve, reject) => {

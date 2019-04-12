@@ -1,25 +1,28 @@
-const sentenceBoundaryDetection = require('sbd')
-
-const watsonApiKey = require('../credentials/watson-nlu.json').apikey
-const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
-
 const robots = {
     watson: require('./watson.js'),
     wikipedia: require('./wikipedia.js'),
-    state: require('./state.js')
+    state: require('./state.js'),
+    learn: require('./learn.js')
 }
 
 async function robot() {
-    const content = robots.state.load()
     responseWatson = await robots.watson()
-    content.output = {}
 
     if (responseWatson.entities.length === 0) {
-        content.sourceWikipedia = await robots.wikipedia()
+        await robots.wikipedia()
+        await robots.learn()
+        finalState(1);
     } else {
-        content.output.text = responseWatson.output.text[0];
+        finalState(responseWatson.output.text[0]);
     }
-    robots.state.save(content)
+
+    function finalState(output) {
+        const response = robots.state.load()
+        response.output = {};
+        response.output.text = output
+        robots.state.save(response)
+    }
+
 }
 
-module.exports = robot 
+module.exports = robot
