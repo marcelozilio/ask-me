@@ -1,12 +1,21 @@
 const sentenceBoundaryDetection = require('sbd')
 
-const watsonCredentials = require('../credentials/watson-nlu.json')
+const watsonNluCredentials = require('../credentials/watson-nlu.json')
+const watsonAssistCredentials = require('../credentials/watson-assistant.json')
+
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
+const AssistantV1 = require('watson-developer-cloud/assistant/v1')
 
 const nlu = new NaturalLanguageUnderstandingV1({
-    iam_apikey: watsonCredentials.apikey,
+    iam_apikey: watsonNluCredentials.apikey,
     version: '2018-04-05',
-    url: watsonCredentials.url
+    url: watsonNluCredentials.url
+})
+
+const assistant = new AssistantV1({
+    iam_apikey: watsonAssistCredentials.apikey,
+    version: '2018-04-05',
+    url: watsonAssistCredentials.url
 })
 
 const robots = {
@@ -18,8 +27,20 @@ async function robot() {
 
     breakContentIntoSentences()
     fetchKeywordsOfAllSentences()
+    await createEntity(getParamsEntity())
 
+    content.output = {}
+    content.output.text = content.sentences[0].text;
     robots.state.save(content)
+
+   
+    async function createEntity(params) {
+        return new Promise((resolve, reject) => {
+            service.createEntity(params)
+                .then(res => { resolve(res) })
+                .catch(err => { resolve(err) })
+        })
+    }
 
     function breakContentIntoSentences() {
         content.sentences = []
@@ -56,6 +77,26 @@ async function robot() {
             })
         })
     }
+
+    function fetchNameEntity() {
+        var a = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+        var name = ''
+        for (var i = 0; i < 5; i++) {
+            var rnum = Math.floor(Math.random() * a.length)
+            name += a.substring(rnum, rnum + 1)
+        }
+        return name
+    }
+
+    function getParamsEntity() {
+        const params = {
+            workspace_id: watsonAssistCredentials.workspace_id,
+            entity: fetchNameEntity(),
+            values: content.sentences
+        }
+        return params
+    }
+
 
 }
 
