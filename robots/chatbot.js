@@ -8,12 +8,15 @@ const robots = {
 async function robot() {
     responseWatson = await robots.watson()
 
-    if (responseWatson.entities.length === 0) {
+    console.log(responseWatson)
+
+    if (responseWatson.output.text == 'error') {
         await robots.wikipedia()
         await robots.learn()
-        finalState(1);
+        const content = robots.state.load();
+        finalState(content.output.text)   
     } else {
-        finalState(responseWatson.output.text[0]);
+        finalState(responseWatson.output.text[0])
     }
 
     function finalState(output) {
@@ -22,7 +25,6 @@ async function robot() {
         response.output.text = output
         robots.state.save(response)
     }
-
 }
 
 module.exports = robot
