@@ -8,8 +8,6 @@ const robots = {
 async function robot() {
     responseWatson = await robots.watson()
 
-    console.log(responseWatson)
-
     if (responseWatson.output.text == 'error') {
         await robots.wikipedia()
         await robots.learn()
