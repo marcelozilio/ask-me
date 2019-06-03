@@ -32,11 +32,10 @@ async function robot() {
     content.output = {}
     content.output.text = content.sentences[0].text;
     robots.state.save(content)
-
    
     async function createEntity(params) {
         return new Promise((resolve, reject) => {
-            service.createEntity(params)
+            assistant.createEntity(params)
                 .then(res => { resolve(res) })
                 .catch(err => { resolve(err) })
         })
@@ -96,8 +95,6 @@ async function robot() {
         }
         return params
     }
-
-
 }
 
 module.exports = robot
